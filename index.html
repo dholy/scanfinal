@@ -33,8 +33,9 @@
       // Take a photo and display it
       takePhoto();
 
-      // Stop the scanner after taking a photo
+      // Stop the scanner after taking a photo and hide the camera view
       html5QrcodeScanner.pause();
+      document.getElementById('qr-reader').style.display = 'none';
     }
 
     function takePhoto() {
