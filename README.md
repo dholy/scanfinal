@@ -1,4 +1,4 @@
-# Sumber java script
+# Sumber java script untuk qrcode
 https://github.com/mebjas/html5-qrcode
 
 
