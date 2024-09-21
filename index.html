@@ -2,6 +2,14 @@
 <html>
 <head>
   <title>QR Code Scanner</title>
+  <style>
+    #photo-preview {
+      display: none;
+    }
+    #result-box p {
+      margin-bottom: 0;
+    }
+  </style>
 </head>
 <body>
   <div id="qr-reader" style="width:500px"></div>
@@ -29,6 +37,7 @@
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const photo = canvas.toDataURL('image/jpeg');
       document.getElementById('photo-preview').src = photo;
+      document.getElementById('photo-preview').style.display = 'block'; // Show the photo after it's captured
     }
 
     var html5QrcodeScanner = new Html5QrcodeScanner(
