@@ -7,19 +7,39 @@
   <div id="qr-reader" style="width:500px"></div>
   <div id="result-box">
     <p id="result-text"></p>
+    <img id="photo-preview" src="" alt="Photo Preview">
   </div>
+
+  <button id="take-photo-btn">Take Photo</button>
 
   <script src="html5-qrcode.min.js"></script>
   <script>
     function onScanSuccess(decodedText, decodedResult) {
       // Update the content of the "result-text" element
       document.getElementById('result-text').textContent = decodedText;
+
+      // Take a photo and display it
+      takePhoto();
+    }
+
+    function takePhoto() {
+      const video = document.querySelector('video');
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const photo = canvas.toDataURL('image/jpeg');
+      document.getElementById('photo-preview').src = photo;
     }
 
     var html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", { fps: 10, qrbox: 250 }
     );
     html5QrcodeScanner.render(onScanSuccess);
+
+    // Add event listener to the "Take Photo" button
+    document.getElementById('take-photo-btn').addEventListener('click', takePhoto);
   </script>
 </body>
 </html>
