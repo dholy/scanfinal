@@ -24,12 +24,17 @@
 
   <script src="html5-qrcode.min.js"></script>
   <script>
+    var html5QrcodeScanner;
+
     function onScanSuccess(decodedText, decodedResult) {
       // Update the content of the "result-text" element
       document.getElementById('result-text').textContent = decodedText;
 
       // Take a photo and display it
       takePhoto();
+
+      // Stop the scanner after taking a photo
+      html5QrcodeScanner.pause();
     }
 
     function takePhoto() {
@@ -44,7 +49,7 @@
       document.getElementById('photo-preview').style.display = 'block'; // Show the photo after it's captured
     }
 
-    var html5QrcodeScanner = new Html5QrcodeScanner(
+    html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", { fps: 10, qrbox: 250 }
     );
     html5QrcodeScanner.render(onScanSuccess);
