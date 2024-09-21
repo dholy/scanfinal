@@ -6,15 +6,13 @@
         #qr-reader {
             width: 100%;
             height: 100%;
+            display: none; /* Sembunyikan secara default */
         }
         #photo-preview {
             display: none;
         }
         #result-box p {
             margin-bottom: 0;
-        }
-        #startButton1, #startButton2 {
-            display: block;
         }
         .result-row {
             margin-bottom: 10px;
@@ -50,13 +48,11 @@
             // Stop scanning and hide the camera view for the corresponding row
             if (index === 1) {
                 html5QrcodeScanner1.pause();
-                document.getElementById('qr-reader').style.display = 'none';
-                document.getElementById('startButton1').style.display = 'block';
             } else if (index === 2) {
                 html5QrcodeScanner2.pause();
-                document.getElementById('qr-reader').style.display = 'none';
-                document.getElementById('startButton2').style.display = 'block';
             }
+            document.getElementById('qr-reader').style.display = 'none';
+            document.getElementById('startButton' + index).style.display = 'block';
         }
 
         function takePhoto(index) {
@@ -95,7 +91,8 @@
         html5QrcodeScanner2 = new Html5QrcodeScanner(
             "qr-reader", { fps: 10, qrbox: 250 }
         );
-        html5QrcodeScanner1.render(onScanSuccess.bind(null, 1));
+        // Sembunyikan tampilan kamera saat awal
+        document.getElementById('qr-reader').style.display = 'none';
     </script>
 </body>
 </html>
