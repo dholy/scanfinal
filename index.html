@@ -3,6 +3,10 @@
 <head>
   <title>QR Code Scanner</title>
   <style>
+    #qr-reader {
+      width: 100%;
+      height: 100%;
+    }
     #photo-preview {
       display: none;
     }
@@ -12,7 +16,7 @@
   </style>
 </head>
 <body>
-  <div id="qr-reader" style="width:500px"></div>
+  <div id="qr-reader"></div>
   <div id="result-box">
     <p id="result-text"></p>
     <img id="photo-preview" src="" alt="Photo Preview">
