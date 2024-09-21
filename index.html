@@ -1,91 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pemindai QR Code Berbaris</title>
+  <title>Pemindai QR Code</title>
   <style>
-    /* Gaya CSS */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: center;
-    }
     #qr-reader {
-      display: none;
-      width: 300px;
-      height: 250px;
+      width: 100%;
+      height: 100%;
     }
-    img.result-image {
-      max-width: 100%;
-      height: auto;
+    #photo-preview {
+      display: none;
+    }
+    #result-box p {
+      margin-bottom: 0;
+    }
+    #startButton {
+      display: block;
     }
   </style>
 </head>
 <body>
   <div id="qr-reader"></div>
-
-  <table>
-    <tr>
-      <th>Teks</th>
-      <th>Scan</th>
-      <th>Hasil Scan</th>
-    </tr>
-    <tr>
-      <td>ATG CONSOLE</td>
-      <td><button class="scanButton" data-row="0">Scan</button></td>
-      <td><img class="result-image" id="resultImage0"></td>
-    </tr>
-    <tr>
-      <td>ROUTER</td>
-      <td><button class="scanButton" data-row="1">Scan</button></td>
-      <td><img class="result-image" id="resultImage1"></td>
-    </tr>
-    </table>
+  <div id="result-box">
+    <p id="result-text"></p>
+    <img id="photo-preview" src="" alt="Pratinjau Foto">
+    <button id="startButton">Start Scanning</button>
+  </div>
 
   <script src="html5-qrcode.min.js"></script>
   <script>
     var html5QrcodeScanner;
 
-    function onScanSuccess(decodedText, decodedResult, row) {
-      // Update hasil scan untuk baris tertentu
-      document.querySelectorAll('.result')[row].textContent = decodedText;
+    function onScanSuccess(decodedText, decodedResult) {
+      // Update konten elemen "result-text"
+      document.getElementById('result-text').textContent = decodedText;
 
-      // Tampilkan gambar hasil capture
-      const resultImage = document.getElementById(`resultImage${row}`);
-      resultImage.src = decodedResult.image.src;
+      // Ambil foto dan tampilkan
+      takePhoto();
 
-      // Sembunyikan tampilan kamera dan aktifkan kembali tombol Scan
+      // Hentikan pemindaian dan sembunyikan tampilan kamera
       html5QrcodeScanner.pause();
       document.getElementById('qr-reader').style.display = 'none';
-      document.querySelectorAll('.scanButton')[row].disabled = false;
+      document.getElementById('startButton').style.display = 'block';
     }
+
+    function takePhoto() {
+      const video = document.querySelector('video');
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const photo = canvas.toDataURL('image/jpeg');
+      document.getElementById('photo-preview').src = photo;
+      document.getElementById('photo-preview').style.display = 'block';
+    }
+
+    function startScanning() {
+      // Tampilkan kembali tampilan kamera dan sembunyikan tombol
+      document.getElementById('qr-reader').style.display = 'block';
+      document.getElementById('startButton').style.display = 'none';
+
+      // Mulai pemindaian
+      html5QrcodeScanner.render(onScanSuccess);
+    }
+
+    // Inisialisasi tombol Start Scanning
+    document.getElementById('startButton').addEventListener('click', startScanning);
 
     // Inisialisasi scanner QR code
     html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", { fps: 10, qrbox: 250 }
     );
-
-    // Tambahkan event listener ke semua tombol Scan
-    const scanButtons = document.querySelectorAll('.scanButton');
-    scanButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const row = button.dataset.row;
-        startScanning(row);
-      });
-    });
-
-    function startScanning(row) {
-      // Tampilkan tampilan kamera dan nonaktifkan tombol
-      document.getElementById('qr-reader').style.display = 'block';
-      document.querySelectorAll('.scanButton')[row].disabled = true;
-
-      html5QrcodeScanner.render((decodedText, decodedResult) => {
-        onScanSuccess(decodedText, decodedResult, row);
-      });
-    }
+    html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
