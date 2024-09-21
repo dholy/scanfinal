@@ -14,11 +14,14 @@
 
   <script src="html5-qrcode.min.js"></script>
   <script>
+    let isScanning = true;
+
     function onScanSuccess(decodedText, decodedResult) {
       // Update the content of the "result-text" element
       document.getElementById('result-text').textContent = decodedText;
 
-      // Take a photo and display it
+      // Stop scanning and take a photo
+      isScanning = false;
       takePhoto();
     }
 
