@@ -10,18 +10,13 @@
     <img id="photo-preview" src="" alt="Photo Preview">
   </div>
 
-  <button id="take-photo-btn">Take Photo</button>
-
   <script src="html5-qrcode.min.js"></script>
   <script>
-    let isScanning = true;
-
     function onScanSuccess(decodedText, decodedResult) {
       // Update the content of the "result-text" element
       document.getElementById('result-text').textContent = decodedText;
 
-      // Stop scanning and take a photo
-      isScanning = false;
+      // Take a photo and display it
       takePhoto();
     }
 
@@ -40,9 +35,6 @@
       "qr-reader", { fps: 10, qrbox: 250 }
     );
     html5QrcodeScanner.render(onScanSuccess);
-
-    // Add event listener to the "Take Photo" button
-    document.getElementById('take-photo-btn').addEventListener('click', takePhoto);
   </script>
 </body>
 </html>
