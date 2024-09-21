@@ -16,34 +16,53 @@
     #startButton {
       display: block;
     }
+    .row {
+      margin-bottom: 10px;
+    }
+    .result-column {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div id="qr-reader"></div>
   <div id="result-box">
-    <p id="result-text"></p>
-    <img id="photo-preview" src="" alt="Pratinjau Foto">
-    <button id="startButton">Start Scanning</button>
+    <div class="row">
+      <p>Teks 1:</p>
+      <button class="scanButton" data-row="0">Scan</button>
+      <div class="result-column">
+        <p id="resultText0"></p>
+        <img id="photoPreview0" src="" alt="Pratinjau Foto">
+      </div>
+    </div>
+    <div class="row">
+      <p>Teks 2:</p>
+      <button class="scanButton" data-row="1">Scan</button>
+      <div class="result-column">
+        <p id="resultText1"></p>
+        <img id="photoPreview1" src="" alt="Pratinjau Foto">
+      </div>
+    </div>
   </div>
 
   <script src="html5-qrcode.min.js"></script>
   <script>
     var html5QrcodeScanner;
 
-    function onScanSuccess(decodedText, decodedResult) {
+    function onScanSuccess(decodedText, decodedResult, row) {
       // Update konten elemen "result-text"
-      document.getElementById('result-text').textContent = decodedText;
+      document.getElementById(`resultText${row}`).textContent = decodedText;
 
       // Ambil foto dan tampilkan
-      takePhoto();
+      takePhoto(row);
 
       // Hentikan pemindaian dan sembunyikan tampilan kamera
       html5QrcodeScanner.pause();
       document.getElementById('qr-reader').style.display = 'none';
-      document.getElementById('startButton').style.display = 'block';
+      document.querySelectorAll('.scanButton')[row].style.display = 'block';
     }
 
-    function takePhoto() {
+    function takePhoto(row) {
       const video = document.querySelector('video');
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
@@ -51,21 +70,26 @@
       const context = canvas.getContext('2d');
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const photo = canvas.toDataURL('image/jpeg');
-      document.getElementById('photo-preview').src = photo;
-      document.getElementById('photo-preview').style.display = 'block';
+      document.getElementById(`photoPreview${row}`).src = photo;
+      document.getElementById(`photoPreview${row}`).style.display = 'block';
     }
 
-    function startScanning() {
+    function startScanning(row) {
       // Tampilkan kembali tampilan kamera dan sembunyikan tombol
       document.getElementById('qr-reader').style.display = 'block';
-      document.getElementById('startButton').style.display = 'none';
+      document.querySelectorAll('.scanButton')[row].style.display = 'none';
 
       // Mulai pemindaian
       html5QrcodeScanner.render(onScanSuccess);
     }
 
     // Inisialisasi tombol Start Scanning
-    document.getElementById('startButton').addEventListener('click', startScanning);
+    document.querySelectorAll('.scanButton').forEach(button => {
+      button.addEventListener('click', () => {
+        const row = button.dataset.row;
+        startScanning(row);
+      });
+    });
 
     // Inisialisasi scanner QR code
     html5QrcodeScanner = new Html5QrcodeScanner(
