@@ -14,7 +14,7 @@
       margin-bottom: 0;
     }
     #startButton {
-      display: block; /* Tampilkan tombol awalnya */
+      display: block;
     }
   </style>
 </head>
@@ -23,7 +23,7 @@
   <div id="result-box">
     <p id="result-text"></p>
     <img id="photo-preview" src="" alt="Pratinjau Foto">
-    <button id="startButton">Mulai Pemindaian</button>
+    <button id="startButton">Start Scanning</button>
   </div>
 
   <script src="html5-qrcode.min.js"></script>
@@ -40,7 +40,7 @@
       // Hentikan pemindaian dan sembunyikan tampilan kamera
       html5QrcodeScanner.pause();
       document.getElementById('qr-reader').style.display = 'none';
-      document.getElementById('startButton').style.display = 'block'; // Tampilkan tombol Mulai Pemindaian
+      document.getElementById('startButton').style.display = 'block';
     }
 
     function takePhoto() {
@@ -52,7 +52,7 @@
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const photo = canvas.toDataURL('image/jpeg');
       document.getElementById('photo-preview').src = photo;
-      document.getElementById('photo-preview').style.display = 'block'; // Tampilkan foto setelah diambil
+      document.getElementById('photo-preview').style.display = 'block';
     }
 
     function startScanning() {
@@ -64,7 +64,7 @@
       html5QrcodeScanner.render(onScanSuccess);
     }
 
-    // Inisialisasi tombol Mulai Pemindaian
+    // Inisialisasi tombol Start Scanning
     document.getElementById('startButton').addEventListener('click', startScanning);
 
     // Inisialisasi scanner QR code
