@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>QR Code Scanner</title>
+  <title>Pemindai QR Code</title>
   <style>
     #qr-reader {
       width: 100%;
@@ -13,13 +13,17 @@
     #result-box p {
       margin-bottom: 0;
     }
+    #startButton {
+      display: block; /* Tampilkan tombol awalnya */
+    }
   </style>
 </head>
 <body>
   <div id="qr-reader"></div>
   <div id="result-box">
     <p id="result-text"></p>
-    <img id="photo-preview" src="" alt="Photo Preview">
+    <img id="photo-preview" src="" alt="Pratinjau Foto">
+    <button id="startButton">Mulai Pemindaian</button>
   </div>
 
   <script src="html5-qrcode.min.js"></script>
@@ -27,15 +31,16 @@
     var html5QrcodeScanner;
 
     function onScanSuccess(decodedText, decodedResult) {
-      // Update the content of the "result-text" element
+      // Update konten elemen "result-text"
       document.getElementById('result-text').textContent = decodedText;
 
-      // Take a photo and display it
+      // Ambil foto dan tampilkan
       takePhoto();
 
-      // Stop the scanner after taking a photo and hide the camera view
+      // Hentikan pemindaian dan sembunyikan tampilan kamera
       html5QrcodeScanner.pause();
       document.getElementById('qr-reader').style.display = 'none';
+      document.getElementById('startButton').style.display = 'block'; // Tampilkan tombol Mulai Pemindaian
     }
 
     function takePhoto() {
@@ -47,9 +52,22 @@
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const photo = canvas.toDataURL('image/jpeg');
       document.getElementById('photo-preview').src = photo;
-      document.getElementById('photo-preview').style.display = 'block'; // Show the photo after it's captured
+      document.getElementById('photo-preview').style.display = 'block'; // Tampilkan foto setelah diambil
     }
 
+    function startScanning() {
+      // Tampilkan kembali tampilan kamera dan sembunyikan tombol
+      document.getElementById('qr-reader').style.display = 'block';
+      document.getElementById('startButton').style.display = 'none';
+
+      // Mulai pemindaian
+      html5QrcodeScanner.render(onScanSuccess);
+    }
+
+    // Inisialisasi tombol Mulai Pemindaian
+    document.getElementById('startButton').addEventListener('click', startScanning);
+
+    // Inisialisasi scanner QR code
     html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", { fps: 10, qrbox: 250 }
     );
