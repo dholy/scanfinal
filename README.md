@@ -1,3 +1,7 @@
+# Sumber java script
+https://github.com/mebjas/html5-qrcode
+
+
 # html5-qrcode without any external frameworks
 
 ## Include the js library in your project
