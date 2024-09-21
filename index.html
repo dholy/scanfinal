@@ -3,7 +3,7 @@
 <head>
   <title>Pemindai QR Code Berbaris</title>
   <style>
-    /* Gaya CSS untuk tabel dan elemen lainnya */
+    /* Gaya CSS */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -18,17 +18,14 @@
       width: 300px;
       height: 250px;
     }
-    .result {
-      font-weight: bold;
+    img.result-image {
+      max-width: 100%;
+      height: auto;
     }
   </style>
 </head>
 <body>
   <div id="qr-reader"></div>
-  <div id="result-box">
-    <p id="result-text"></p>
-    <img id="photo-preview" src="" alt="Pratinjau Foto">
-  </div>
 
   <table>
     <tr>
@@ -39,14 +36,14 @@
     <tr>
       <td>ATG CONSOLE</td>
       <td><button class="scanButton" data-row="0">Scan</button></td>
-      <td><span class="result"></span></td>
+      <td><img class="result-image" id="resultImage0"></td>
     </tr>
     <tr>
       <td>ROUTER</td>
-      <td><button class="scanButton" data-row="12">Scan</button></td>
-      <td><span class="result"></span></td>
+      <td><button class="scanButton" data-row="1">Scan</button></td>
+      <td><img class="result-image" id="resultImage1"></td>
     </tr>
-  </table>
+    </table>
 
   <script src="html5-qrcode.min.js"></script>
   <script>
@@ -55,22 +52,15 @@
     function onScanSuccess(decodedText, decodedResult, row) {
       // Update hasil scan untuk baris tertentu
       document.querySelectorAll('.result')[row].textContent = decodedText;
+
+      // Tampilkan gambar hasil capture
+      const resultImage = document.getElementById(`resultImage${row}`);
+      resultImage.src = decodedResult.image.src;
+
       // Sembunyikan tampilan kamera dan aktifkan kembali tombol Scan
       html5QrcodeScanner.pause();
       document.getElementById('qr-reader').style.display = 'none';
       document.querySelectorAll('.scanButton')[row].disabled = false;
-      // Simpan hasil scan ke local storage (opsional)
-      localStorage.setItem(`scanResult_${row}`, decodedText);
-    }
-
-    function startScanning(row) {
-      // Tampilkan tampilan kamera dan nonaktifkan tombol
-      document.getElementById('qr-reader').style.display = 'block';
-      document.querySelectorAll('.scanButton')[row].disabled = true;
-
-      html5QrcodeScanner.render((decodedText, decodedResult) => {
-        onScanSuccess(decodedText, decodedResult, row);
-      });
     }
 
     // Inisialisasi scanner QR code
@@ -87,13 +77,15 @@
       });
     });
 
-    // Muat kembali hasil scan dari local storage (opsional)
-    scanButtons.forEach((button, index) => {
-      const savedResult = localStorage.getItem(`scanResult_${index}`);
-      if (savedResult) {
-        document.querySelectorAll('.result')[index].textContent = savedResult;
-      }
-    });
+    function startScanning(row) {
+      // Tampilkan tampilan kamera dan nonaktifkan tombol
+      document.getElementById('qr-reader').style.display = 'block';
+      document.querySelectorAll('.scanButton')[row].disabled = true;
+
+      html5QrcodeScanner.render((decodedText, decodedResult) => {
+        onScanSuccess(decodedText, decodedResult, row);
+      });
+    }
   </script>
 </body>
 </html>
