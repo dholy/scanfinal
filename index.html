@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pemindai QR Code dengan Lokasi GPS</title>
+  <title>Pemindai QR Code dengan Lokasi GPS dan Foto Perangkat</title>
   <style>
     /* Gaya CSS untuk mengatur tampilan */
     #qr-reader {
@@ -25,16 +25,17 @@
   </style>
 </head>
 <body>
-  <h1>Pemindai QR Code dengan Lokasi GPS</h1>
+  <h1>Pemindai QR Code dengan Lokasi GPS dan Foto Perangkat</h1>
   <div id="qr-reader"></div>
   <button id="startButton">Mulai Memindai</button>
+  <input type="file" id="devicePhotoInput" accept="image/*">
   <table id="result-table">
     <thead>
       <tr>
         <th>No.</th>
         <th>Type Perangkat</th>
-        <th>Fhoto Perangkat</th>
-        <th>Fhoto Serian Number</th>
+        <th>Foto Perangkat</th>
+        <th>Foto Serian Number</th>
         <th>Serian Number</th>
         <th>Waktu Pemindaian</th>
         <th>Lokasi GPS</th>
@@ -49,6 +50,7 @@
     const qrReader = document.getElementById('qr-reader');
     const startButton = document.getElementById('startButton');
     const resultBody = document.getElementById('result-body');
+    const devicePhotoInput = document.getElementById('devicePhotoInput');
     let scanCount = 1;
 
     const html5QrcodeScanner = new Html5QrcodeScanner(
@@ -88,36 +90,26 @@
     function onScanSuccess(decodedText, decodedResult) {
       const newRow = document.createElement('tr');
       newRow.innerHTML = `
-        <td>${scanCount}</td>
-        <td><img src="" alt="Preview Photo ${scanCount}" id="photo-preview${scanCount}"></td>
-        <td>${decodedText}</td>
-        <td>${new Date().toLocaleString()}</td>
-        <td>${window.scanLocation ? `${window.scanLocation.lat}, ${window.scanLocation.lng}` : '-'}</td>
+        <td><span class="math-inline">\{scanCount\}</td\>
+<td\><input type\="text" id\="deviceType</span>{scanCount}"></td>
+        <td>
+          <img src="" alt="Foto Perangkat <span class="math-inline">\{scanCount\}" id\="devicePhotoPreview</span>{scanCount}">
+        </td>
+        <td>
+          <input type="text" id="serialNumberPhoto${scanCount}">
+          <input type="file" id="serialNumberPhotoInput${scanCount}" accept="image/*" style="display: none;">
+        </td>
+        <td><input type="text" id="serialNumber${scanCount}"></td>
+        <td><span class="math-inline">\{new Date\(\)\.toLocaleString\(\)\}</td\>
+<td\></span>{window.scanLocation ? `${window.scanLocation.lat}, ${window.scanLocation.lng}` : '-'}</td>
       `;
       resultBody.appendChild(newRow);
 
-      takePhoto(scanCount);
-      html5QrcodeScanner.pause();
-      scanCount++;
-      startButton.style.display = 'block'; // Tampilkan tombol mulai lagi
-    }
+      const devicePhotoPreview = document.getElementById(`devicePhotoPreview${scanCount}`);
 
-    function takePhoto(index) {
-      const video = document.querySelector('video');
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const context = canvas.getContext('2d');
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const photo = canvas.toDataURL('image/jpeg');
-
-      // Opsional: Tambahkan data lokasi ke metadata gambar (memerlukan dukungan library)
-      // Explore libraries seperti EXIF.js untuk menyematkan data lokasi di dalam gambar itu sendiri.
-
-      document.getElementById('photo-preview' + index).src = photo;
-    }
-
-    startButton.addEventListener('click', startScanning);
-  </script>
-</body>
-</html>
+      devicePhotoInput.onchange = function () {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          devicePhotoPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(this.files[0]);
