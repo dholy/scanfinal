@@ -52,27 +52,81 @@
             'qr-reader', { fps: 10, qrbox: 250 }
         );
 
+        function checkGeolocationSupport() {
+  if (navigator.geolocation) {
+    return true;
+  } else {
+    alert("Geolocation is not supported by your browser.");
+    return false;
+  }
+}
+
+
+function captureLocation(onSuccess) {
+  if (!checkGeolocationSupport()) return;
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;   
+
+      onSuccess(latitude, longitude);
+    },
+    (error) => {
+      console.error("Error getting location:", error);
+      alert("Failed to capture location.");
+    }
+  );
+}
+
+function embedLocationOnPhoto(photo, latitude, longitude) {
+  const canvas = document.createElement('canvas');
+  const img = new Image();
+  img.onload = () => {
+    const context = canvas.getContext('2d');
+    const imgWidth = img.width;
+    const imgHeight = img.height;
+    canvas.width = imgWidth;
+    canvas.height = imgHeight + 20; // Add space for location text
+
+    // Draw image on canvas
+    context.drawImage(img, 0, 0);
+
+    // Display location text
+    context.font = "12px Arial";
+    context.fillStyle = "black";
+    context.fillText(`Location: Lat: ${latitude}, Long: ${longitude}`, 5, imgHeight + 15);
+
+    const newPhoto = canvas.toDataURL('image/jpeg');
+    document.getElementById('photo-preview' + index).src = newPhoto;
+  };
+  img.src = photo;
+}
+        
+        
         function startScanning() {
             qrReader.style.display = 'block';
             startButton.style.display = 'none';
             html5QrcodeScanner.render(onScanSuccess);
         }
 
-        function onScanSuccess(decodedText, decodedResult) {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${scanCount}</td>
-                <td><img src="" alt="Preview Photo ${scanCount}" id="photo-preview${scanCount}"></td>
-                <td>${decodedText}</td>
-                <td>${new Date().toLocaleString()}</td>
-            `;
-            resultBody.appendChild(newRow);
+function onScanSuccess(decodedText, decodedResult) {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td>${scanCount}</td>
+    <td><img src="" alt="Preview Photo ${scanCount}" id="photo-preview${scanCount}"></td>
+    <td>${decodedText}</td>
+    <td>${new Date().toLocaleString()}</td>
+  `;
+  resultBody.appendChild(newRow);
 
-            takePhoto(scanCount);
-            html5QrcodeScanner.pause();
-            scanCount++;
-            startButton.style.display = 'block'; // Tampilkan tombol mulai lagi
-        }
+  captureLocation((latitude, longitude) => {
+    takePhoto(scanCount, photo => embedLocationOnPhoto(photo, latitude, longitude));
+  });
+  html5QrcodeScanner.pause();
+  scanCount++;
+  startButton.style.display = 'block'; // Tampilkan tombol mulai lagi
+}
 
         function takePhoto(index) {
             const video = document.querySelector('video');
