@@ -1,98 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code Scanner</title>
-    <style>
-        #qr-reader {
-            width: 100%;
-            height: 100%;
-            display: none; /* Sembunyikan secara default */
-        }
-        #photo-preview {
-            display: none;
-        }
-        #result-box p {
-            margin-bottom: 0;
-        }
-        .result-row {
-            margin-bottom: 10px;
-        }
-    </style>
+    <title>QR Code Scanner</title>
+    <style>
+        /* Gaya CSS untuk mengatur tampilan */
+        #qr-reader {
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #photo-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-    <div id="qr-reader"></div>
-    <div id="result-box">
-        <div class="result-row">
-            <p id="result-text1"></p>
-            <img id="photo-preview1" src="" alt="Preview Photo 1">
-            <button id="startButton1">Start Scanning 1</button>
-        </div>
-        <div class="result-row">
-            <p id="result-text2"></p>
-            <img id="photo-preview2" src="" alt="Preview Photo 2">
-            <button id="startButton2">Start Scanning 2</button>
-        </div>
-    </div>
+    <div id="qr-reader"></div>
+    <div id="result-box">
+        <div class="result-row">
+            <img id="photo-preview1" src="" alt="Preview Photo 1">
+            <p id="result-text1"></p>
+            <button id="startButton1">Mulai Memindai 1</button>
+        </div>
+        <div class="result-row">
+            <img id="photo-preview2" src="" alt="Preview Photo 2">
+            <p id="result-text2"></p>
+            <button id="startButton2">Mulai Memindai 2</button>
+        </div>
+    </div>
 
-    <script src="html5-qrcode.min.js"></script>
-    <script>
-        var html5QrcodeScanner1, html5QrcodeScanner2;
+    <script src="html5-qrcode.min.js"></script>
+    <script>
+        var html5QrcodeScanner1, html5QrcodeScanner2;
 
-        function onScanSuccess(index, decodedText, decodedResult) {
-            // Update the result text for the corresponding row
-            document.getElementById('result-text' + index).textContent = decodedText;
+        function onScanSuccess(index, decodedText, decodedResult) {
+            // Update teks hasil pemindaian
+            document.getElementById('result-text' + index).textContent = decodedText;
 
-            // Take photo and display it for the corresponding row
-            takePhoto(index);
+            // Ambil foto dan tampilkan
+            takePhoto(index);
 
-            // Stop scanning and hide the camera view for the corresponding row
-            if (index === 1) {
-                html5QrcodeScanner1.pause();
-            } else if (index === 2) {
-                html5QrcodeScanner2.pause();
-            }
-            document.getElementById('qr-reader').style.display = 'none';
-            document.getElementById('startButton' + index).style.display = 'block';
-        }
+            // Hentikan pemindaian dan sembunyikan kamera
+            if (index === 1) {
+                html5QrcodeScanner1.pause();
+            } else if (index === 2) {
+                html5QrcodeScanner2.pause();
+            }
 
-        function takePhoto(index) {
-            const video = document.querySelector('video');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const photo = canvas.toDataURL('image/jpeg');
-            document.getElementById('photo-preview' + index).src = photo;
-            document.getElementById('photo-preview' + index).style.display = 'block';
-        }
+            // Tampilkan notifikasi (opsional)
+            alert('QR code berhasil dipindai: ' + decodedText);
+        }
 
-        function startScanning(index) {
-            // Show the camera view and hide the button for the corresponding row
-            document.getElementById('qr-reader').style.display = 'block';
-            document.getElementById('startButton' + index).style.display = 'none';
+        function takePhoto(index) {
+            const video = document.querySelector('video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const photo = canvas.toDataURL('image/jpeg');
+            document.getElementById('photo-preview' + index).src = photo;
+        }
 
-            // Start scanning for the corresponding row
-            if (index === 1) {
-                html5QrcodeScanner1.render(onScanSuccess.bind(null, 1));
-            } else if (index === 2) {
-                html5QrcodeScanner2.render(onScanSuccess.bind(null, 2));
-            }
-        }
+        function startScanning(index) {
+            // Tampilkan kamera dan sembunyikan tombol
+            document.getElementById('qr-reader').style.display = 'block';
+            document.getElementById('startButton' + index).style.display = 'none';
 
-        // Initialize the Start Scanning buttons
-        document.getElementById('startButton1').addEventListener('click', startScanning.bind(null, 1));
-        document.getElementById('startButton2').addEventListener('click', startScanning.bind(null, 2));
+            // Mulai pemindaian
+            if (index === 1) {
+                html5QrcodeScanner1.render(onScanSuccess.bind(null, 1));
+            } else if (index === 2) {
+                html5QrcodeScanner2.render(onScanSuccess.bind(null, 2));
+            }
+        }
 
-        // Initialize the QR code scanners
-        html5QrcodeScanner1 = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 250 }
-        );
-        html5QrcodeScanner2 = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 250 }
-        );
-        // Sembunyikan tampilan kamera saat awal
-        document.getElementById('qr-reader').style.display = 'none';
-    </script>
+        // Inisialisasi tombol Mulai Memindai
+        document.getElementById('startButton1').addEventListener('click', startScanning.bind(null, 1));
+        document.getElementById('startButton2').addEventListener('click', startScanning.bind(null, 2));
+
+        // Inisialisasi scanner QR code
+        html5QrcodeScanner1 = new Html5QrcodeScanner(
+            "qr-reader", { fps: 10, qrbox: 250 }
+        );
+        html5QrcodeScanner2 = new Html5QrcodeScanner(
+            "qr-reader", { fps: 10, qrbox: 250 }
+        );
+    </script>
 </body>
 </html>
