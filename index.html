@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pemindai QR Code dengan Lokasi GPS dan Foto Perangkat</title>
+  <title>Pemindai QR Code dengan Lokasi GPS</title>
   <style>
     /* Gaya CSS untuk mengatur tampilan */
     #qr-reader {
@@ -25,17 +25,29 @@
   </style>
 </head>
 <body>
-  <h1>Pemindai QR Code dengan Lokasi GPS dan Foto Perangkat</h1>
+  <h1>Pemindai QR Code dengan Lokasi GPS</h1>
   <div id="qr-reader"></div>
   <button id="startButton">Mulai Memindai</button>
-  <input type="file" id="devicePhotoInput" accept="image/*">
   <table id="result-table">
     <thead>
       <tr>
         <th>No.</th>
+        <th>Kolom 1</th>
+        <th>Kolom 2</th>
+        <th>Kolom 3</th>
+        <th>Kolom 4</th>
+        <th>Kolom 5</th>
+        <th>Kolom 6</th>
+        <th>Kolom 7</th>
+        <th>Kolom 8</th>
+        <th>Kolom 9</th>
+        <th>Kolom 10</th>
+        <th>Kolom 11</th>
+        <th>Kolom 12</th>
+        <th>Kolom 13</th>
         <th>Type Perangkat</th>
-        <th>Foto Perangkat</th>
-        <th>Foto Serian Number</th>
+        <th>Fhoto Perangkat</th>
+        <th>Fhoto Serian Number</th>
         <th>Serian Number</th>
         <th>Waktu Pemindaian</th>
         <th>Lokasi GPS</th>
@@ -50,7 +62,6 @@
     const qrReader = document.getElementById('qr-reader');
     const startButton = document.getElementById('startButton');
     const resultBody = document.getElementById('result-body');
-    const devicePhotoInput = document.getElementById('devicePhotoInput');
     let scanCount = 1;
 
     const html5QrcodeScanner = new Html5QrcodeScanner(
@@ -89,27 +100,17 @@
 
     function onScanSuccess(decodedText, decodedResult) {
       const newRow = document.createElement('tr');
+      const additionalColumns = '';  // String untuk menyimpan data kolom tambahan
+
+      // Memproses data kolom tambahan (sesuaikan dengan kebutuhan Anda)
+      for (let i = 1; i <= 13; i++) {
+        const columnData = prompt(`Masukkan data untuk Kolom ${i} (Kosongi jika tidak ada):`);
+        additionalColumns += `<td>${columnData || '-'}</td>`; // Tambahkan '-' jika data kosong
+      }
+
       newRow.innerHTML = `
-        <td><span class="math-inline">\{scanCount\}</td\>
-<td\><input type\="text" id\="deviceType</span>{scanCount}"></td>
-        <td>
-          <img src="" alt="Foto Perangkat <span class="math-inline">\{scanCount\}" id\="devicePhotoPreview</span>{scanCount}">
-        </td>
-        <td>
-          <input type="text" id="serialNumberPhoto${scanCount}">
-          <input type="file" id="serialNumberPhotoInput${scanCount}" accept="image/*" style="display: none;">
-        </td>
-        <td><input type="text" id="serialNumber${scanCount}"></td>
+        <td>${scanCount}</td>
+        <span class="math-inline">\{additionalColumns\}  <td\></span>{decodedText}</td>
         <td><span class="math-inline">\{new Date\(\)\.toLocaleString\(\)\}</td\>
 <td\></span>{window.scanLocation ? `${window.scanLocation.lat}, ${window.scanLocation.lng}` : '-'}</td>
       `;
-      resultBody.appendChild(newRow);
-
-      const devicePhotoPreview = document.getElementById(`devicePhotoPreview${scanCount}`);
-
-      devicePhotoInput.onchange = function () {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          devicePhotoPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(this.files[0]);
