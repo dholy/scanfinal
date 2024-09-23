@@ -51,39 +51,6 @@
   <script>
 
 
-
-
-
-// Memilih elemen HTML yang akan digunakan
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const imgDisplay = document.getElementById('imgDisplay');
-const captureButton = document.getElementById('captureButton');
-
-// Fungsi untuk meminta akses kamera
-async function startVideo() {
-  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  video.srcObject = stream;
-}
-
-// Fungsi untuk mengambil gambar dan menampilkannya
-function capture() {
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-  const imageData = canvas.toDataURL('image/png');
-  imgDisplay.src = imageData;
-}
-
-// Memulai video dan menambahkan event listener pada tombol
-startVideo();
-captureButton.addEventListener('click', capture);
-
-
-
-
-
-
     const qrReader = document.getElementById('qr-reader');
     const startButton = document.getElementById('startButton');
     const resultBody = document.getElementById('result-body');
@@ -132,6 +99,36 @@ captureButton.addEventListener('click', capture);
         <td>${new Date().toLocaleString()}</td>
         <td>${window.scanLocation ? `${window.scanLocation.lat}, ${window.scanLocation.lng}` : '-'}</td>
         <td>
+
+
+
+// Memilih elemen HTML yang akan digunakan
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const imgDisplay = document.getElementById('imgDisplay');
+const captureButton = document.getElementById('captureButton');
+
+// Fungsi untuk meminta akses kamera
+async function startVideo() {
+  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  video.srcObject = stream;
+}
+
+// Fungsi untuk mengambil gambar dan menampilkannya
+function capture() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  const imageData = canvas.toDataURL('image/png');
+  imgDisplay.src = imageData;
+}
+
+// Memulai video dan menambahkan event listener pada tombol
+startVideo();
+captureButton.addEventListener('click', capture);
+
+
+
          
 <video id="video" width="320" height="240"></video>
 <canvas id="canvas" style="display: none;"></canvas>
