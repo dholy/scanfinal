@@ -7,13 +7,21 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="success-message"></div>
 
     <script>
-        function handleScriptLoaded(scriptName) {
-            const successMessage = document.getElementById('success-message');
-            successMessage.textContent = `Script ${scriptName} berhasil dimuat!`;
-        }
+    const qrReader = document.getElementById('qr-reader');
+    const startButton = document.getElementById('startButton');
+    const resultBody = document.getElementById('result-body');
+    let scanCount = 1;
+
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      'qr-reader', { fps: 10, qrbox: 250 }
+    );
+
+startButton.addEventListener('click', startScanning);
+
+
+      
     </script>
 
   
