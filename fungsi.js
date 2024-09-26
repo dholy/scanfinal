@@ -1,15 +1,4 @@
-const qrReader = document.getElementById('qr-reader');
-    const startButton = document.getElementById('startButton');
-    const resultBody = document.getElementById('result-body');
-    let scanCount = 1;
-
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      'qr-reader', { fps: 10, qrbox: 250 }
-    );
-
-
-
-    // Fungsi untuk meminta izin lokasi
+// Fungsi untuk meminta izin lokasi
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -86,6 +75,3 @@ const qrReader = document.getElementById('qr-reader');
       document.getElementById('photo-preview' + index).src = photo;
     }
 
-
-
-    startButton.addEventListener('click', startScanning);
