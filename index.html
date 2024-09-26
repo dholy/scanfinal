@@ -7,6 +7,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="success-message"></div>
+
+    <script>
+        function handleScriptLoaded(scriptName) {
+            const successMessage = document.getElementById('success-message');
+            successMessage.textContent = `Script ${scriptName} berhasil dimuat!`;
+        }
+    </script>
+
+  
   
   <h1>Pemindai QR Code dengan Lokasi GPS</h1>
 
