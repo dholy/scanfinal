@@ -7,8 +7,24 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  
   <h1>Pemindai QR Code dengan Lokasi GPS</h1>
-  <div id="qr-reader"></div>
+      <div id="floating-area">
+        <div id="qr-reader">
+            <p>Hasil pemindaian akan ditampilkan di sini.</p>
+        </div>
+        <button id="close-button11">Tutup</button>
+    </div>
+
+
+    <script>
+        // JavaScript untuk menyembunyikan area mengambang
+        document.getElementById('close-button11').addEventListener('click', function() {
+            document.getElementById('floating-area').style.display = 'none';
+        });
+    </script>
+  
+    
   <div id="pembatas"></div>
 
   <button id="startButton">Mulai Memindai</button>
