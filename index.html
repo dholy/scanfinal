@@ -92,12 +92,12 @@
 
     function onScanSuccess(decodedText, decodedResult) {
       const newRow = document.createElement('tr');
-      newRow.innerHTML = 
+      newRow.innerHTML = `
         <td>${scanCount}</td>
         <td><img src="" alt="Preview Photo ${scanCount}" id="photo-preview${scanCount}"></td>
         <td>${decodedText}</td>
         <td>${new Date().toLocaleString()}</td>
-        <td>${window.scanLocation ? ${window.scanLocation.lat}, ${window.scanLocation.lng} : '-'}</td>
+        <td>${window.scanLocation ? `${window.scanLocation.lat}, ${window.scanLocation.lng}` : '-'}</td>
         <td>
          
 <video id="video" width="320" height="240"></video>
@@ -106,7 +106,7 @@
 <img id="imgDisplay">
        </td>
 
-      ;
+      `;
       resultBody.appendChild(newRow);
 
       takePhoto(scanCount);
