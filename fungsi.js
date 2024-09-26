@@ -34,7 +34,6 @@ const qrReader = document.getElementById('qr-reader');
 
     function startScanning() {
       getLocation(); // Meminta izin lokasi sebelum memulai pemindaian
-      document.getElementById('floating-area').style.display = 'block';
       qrReader.style.display = 'block';
       startButton.style.display = 'none';
       html5QrcodeScanner.render(onScanSuccess);
