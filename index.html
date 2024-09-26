@@ -2,11 +2,29 @@
 <html>
 <head>
   <title>Pemindai QR Code dengan Lokasi GPS</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h1>Pemindai QR Code dengan Lokasi GPS</h1>
+  <div id="qr-reader"></div>
+  <div id="pembatas"></div>
+  <button id="startButton">Mulai Memindai</button>
+  <table id="result-table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Eviden Foto</th>
+        <th>Teks Scan</th>
+        <th>Waktu Pemindaian</th>
+        <th>Lokasi GPS</th>
+      </tr>
+    </thead>
+    <tbody id="result-body">
+    </tbody>
+  </table>
   <script src="html5-qrcode.min.js"></script>
-    <script>
+  <script>
+
+
     const qrReader = document.getElementById('qr-reader');
     const startButton = document.getElementById('startButton');
     const resultBody = document.getElementById('result-body');
@@ -16,7 +34,7 @@
       'qr-reader', { fps: 10, qrbox: 250 }
     );
 
-// Fungsi untuk meminta izin lokasi
+    // Fungsi untuk meminta izin lokasi
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -46,9 +64,6 @@
       html5QrcodeScanner.render(onScanSuccess);
     }
 
-
-
-
     function onScanSuccess(decodedText, decodedResult) {
       const newRow = document.createElement('tr');
       newRow.innerHTML = 
@@ -59,10 +74,10 @@
         <td>${window.scanLocation ? ${window.scanLocation.lat}, ${window.scanLocation.lng} : '-'}</td>
         <td>
          
-<video id="video_${scanCount}" width="320" height="240"></video>
-<canvas id="canvas_${scanCount}" style="display: none;"></canvas>
-<button id="captureButton_${scanCount}">Ambil Gambar</button>
-<img id="imgDisplay_${scanCount}">
+<video id="video" width="320" height="240"></video>
+<canvas id="canvas" style="display: none;"></canvas>
+<button id="captureButton">Ambil Gambar</button>
+<img id="imgDisplay">
        </td>
 
       ;
@@ -73,10 +88,6 @@
       scanCount++;
       startButton.style.display = 'block'; // Tampilkan tombol mulai lagi
     }
-
-
-
-
 
     function takePhoto(index) {
       const video = document.querySelector('video');
@@ -93,49 +104,7 @@
       document.getElementById('photo-preview' + index).src = photo;
     }
 
-
-
-
-
-
-
-
-      
-startButton.addEventListener('click', startScanning);
-
-      
-
-      
-    </script>
-
-  
-  
-  <h1>Pemindai QR Code dengan Lokasi GPS</h1>
-
-  <div id="qr-reader" ></div>
-
-
-
-  <div id="pembatas"></div>
-
-  <button id="startButton">Mulai Memindai</button>
-
-  <table id="result-table">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th>Eviden Foto</th>
-        <th>Teks Scan</th>
-        <th>Waktu Pemindaian</th>
-        <th>Lokasi GPS</th>
-        <th>Fhoto perangkat</th>
-      </tr>
-    </thead>
-    <tbody id="result-body">
-    </tbody>
-
-
-  </table>
-  
+    startButton.addEventListener('click', startScanning);
+  </script>
 </body>
 </html>
